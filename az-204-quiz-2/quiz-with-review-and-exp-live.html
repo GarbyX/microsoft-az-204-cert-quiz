@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AZ-204 Exam Prep</title>
+    <title>AZ-204 Exam Simulator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,12 +43,12 @@
 </head>
 <body>
     <div class="quiz-container">
-        <h1>AZ-204 Exam Prep</h1>
+        <h1>AZ-204 Exam Simulator</h1>
         <div id="question-container"></div>
         <div id="options-container"></div>
         <button id="next-btn" style="display: none;">Next</button>
         <div id="progress">Progress: <span id="progress-count">0</span>/100</div>
-        <div id="timer">Time left: <span id="time-left">30</span> sec</div>
+        <div id="timer">Elapsed Time: <span id="time-left">0</span> min</div>
     </div>
 
     <script>
@@ -61,20 +61,17 @@
 
         let currentQuestionIndex = 0;
         let score = 0;
-        let timeLeft = 30;
+        let timeElapsed = 0;
         let timer;
 
-        function loadQuestion() {
-            clearInterval(timer);
-            timeLeft = 30;
-            document.getElementById("time-left").textContent = timeLeft;
-
+        function startTimer() {
             timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById("time-left").textContent = timeLeft;
-                if (timeLeft === 0) nextQuestion();
+                timeElapsed++;
+                document.getElementById("time-left").textContent = (timeElapsed / 60).toFixed(2);
             }, 1000);
+        }
 
+        function loadQuestion() {
             document.getElementById("question-container").textContent = questions[currentQuestionIndex].question;
             const optionsContainer = document.getElementById("options-container");
             optionsContainer.innerHTML = "";
@@ -111,7 +108,7 @@
                 loadQuestion();
             } else {
                 clearInterval(timer);
-                document.getElementById("question-container").textContent = `Quiz Complete! Your score: ${score}/${questions.length}`;
+                document.getElementById("question-container").textContent = `Exam Complete! Your score: ${score}/${questions.length}`;
                 document.getElementById("options-container").innerHTML = "";
                 document.getElementById("progress").style.display = "none";
                 document.getElementById("timer").style.display = "none";
@@ -120,6 +117,7 @@
         }
 
         document.getElementById("next-btn").addEventListener("click", nextQuestion);
+        startTimer();
         loadQuestion();
     </script>
 </body>
