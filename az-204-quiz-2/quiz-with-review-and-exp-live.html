@@ -46,9 +46,9 @@
         <h1>AZ-204 Exam Simulator</h1>
         <div id="question-container"></div>
         <div id="options-container"></div>
-        <button id="next-btn" style="display: none;">Next</button>
+        <button id="next-btn">Next</button>
         <div id="progress">Progress: <span id="progress-count">0</span>/100</div>
-        <div id="timer">Elapsed Time: <span id="time-left">0</span> min</div>
+        <div id="timer">Time left: <span id="time-left">120</span> min</div>
     </div>
 
     <script>
@@ -61,13 +61,17 @@
 
         let currentQuestionIndex = 0;
         let score = 0;
-        let timeElapsed = 0;
+        let timeLeft = 120 * 60; // Convert minutes to seconds
         let timer;
 
         function startTimer() {
             timer = setInterval(() => {
-                timeElapsed++;
-                document.getElementById("time-left").textContent = (timeElapsed / 60).toFixed(2);
+                timeLeft--;
+                document.getElementById("time-left").textContent = Math.floor(timeLeft / 60);
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endExam();
+                }
             }, 1000);
         }
 
@@ -75,7 +79,6 @@
             document.getElementById("question-container").textContent = questions[currentQuestionIndex].question;
             const optionsContainer = document.getElementById("options-container");
             optionsContainer.innerHTML = "";
-            document.getElementById("next-btn").style.display = "none";
 
             questions[currentQuestionIndex].options.forEach(option => {
                 const button = document.createElement("button");
@@ -94,7 +97,6 @@
                         button.appendChild(explanationDiv);
                         explanationDiv.style.display = "block";
                     }
-                    document.getElementById("next-btn").style.display = "block";
                 };
                 optionsContainer.appendChild(button);
             });
@@ -107,13 +109,17 @@
             if (currentQuestionIndex < questions.length) {
                 loadQuestion();
             } else {
-                clearInterval(timer);
-                document.getElementById("question-container").textContent = `Exam Complete! Your score: ${score}/${questions.length}`;
-                document.getElementById("options-container").innerHTML = "";
-                document.getElementById("progress").style.display = "none";
-                document.getElementById("timer").style.display = "none";
-                document.getElementById("next-btn").style.display = "none";
+                endExam();
             }
+        }
+
+        function endExam() {
+            clearInterval(timer);
+            document.getElementById("question-container").textContent = `Exam Complete! Your score: ${score}/${questions.length}`;
+            document.getElementById("options-container").innerHTML = "";
+            document.getElementById("progress").style.display = "none";
+            document.getElementById("timer").style.display = "none";
+            document.getElementById("next-btn").style.display = "none";
         }
 
         document.getElementById("next-btn").addEventListener("click", nextQuestion);
