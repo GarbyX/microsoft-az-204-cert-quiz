@@ -1,0 +1,27 @@
+[
+    {
+        "question": "Which Azure service provides serverless computing?",
+        "options": ["Azure Kubernetes Service", "Azure Virtual Machines", "Azure Functions", "Azure App Service"],
+        "correct": "Azure Functions"
+    },
+    {
+        "question": "Which authentication method is recommended for securing an Azure Function App?",
+        "options": ["Basic Authentication", "OAuth 2.0", "Shared Key Authentication", "LDAP"],
+        "correct": "OAuth 2.0"
+    },
+    {
+        "question": "What is Azure Key Vault primarily used for?",
+        "options": ["Hosting virtual machines", "Managing cryptographic keys & secrets", "Storing relational data", "Running web applications"],
+        "correct": "Managing cryptographic keys & secrets"
+    },
+    {
+        "question": "Which Azure service is best for managing containerized applications?",
+        "options": ["Azure Virtual Machines", "Azure App Service", "Azure Kubernetes Service", "Azure Blob Storage"],
+        "correct": "Azure Kubernetes Service"
+    },
+    {
+        "question": "What type of storage solution is recommended for unstructured data in Azure?",
+        "options": ["Azure Table Storage", "Azure Blob Storage", "Azure Queue Storage", "Azure SQL Database"],
+        "correct": "Azure Blob Storage"
+    }
+]

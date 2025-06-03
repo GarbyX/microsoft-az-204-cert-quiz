@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-204 Exam Prep</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .quiz-container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        #progress, #timer {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .review-container {
+            display: none;
+            text-align: left;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>AZ-204 Exam Prep</h1>
+        <div id="question-container"></div>
+        <div id="options-container"></div>
+        <button id="next-btn">Next</button>
+        <div id="progress">Progress: <span id="progress-count">0</span>/100</div>
+        <div id="timer">Time left: <span id="time-left">30</span> sec</div>
+    </div>
+
+    <div class="review-container">
+        <h2>Review Mode</h2>
+        <ul id="review-list"></ul>
+    </div>
+
+    <script>
+        const questions = [
+            {"question": "Which Azure service provides serverless computing?", "options": ["Azure Kubernetes Service", "Azure Virtual Machines", "Azure Functions", "Azure App Service"], "correct": "Azure Functions"},
+            {"question": "Which authentication method is recommended for securing an Azure Function App?", "options": ["Basic Authentication", "OAuth 2.0", "Shared Key Authentication", "LDAP"], "correct": "OAuth 2.0"},
+            {"question": "What is Azure Key Vault primarily used for?", "options": ["Hosting virtual machines", "Managing cryptographic keys & secrets", "Storing relational data", "Running web applications"], "correct": "Managing cryptographic keys & secrets"},
+            {"question": "Which Azure service is best for managing containerized applications?", "options": ["Azure Virtual Machines", "Azure App Service", "Azure Kubernetes Service", "Azure Blob Storage"], "correct": "Azure Kubernetes Service"},
+            {"question": "What type of storage solution is recommended for unstructured data in Azure?", "options": ["Azure Table Storage", "Azure Blob Storage", "Azure Queue Storage", "Azure SQL Database"], "correct": "Azure Blob Storage"},
+            // Add 95 more questions here...
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30;
+        let timer;
+        let userAnswers = [];
+
+        function loadQuestion() {
+            clearInterval(timer);
+            timeLeft = 30;
+            document.getElementById("time-left").textContent = timeLeft;
+
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById("time-left").textContent = timeLeft;
+                if (timeLeft === 0) nextQuestion();
+            }, 1000);
+
+            document.getElementById("question-container").textContent = questions[currentQuestionIndex].question;
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+
+            questions[currentQuestionIndex].options.forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.onclick = () => {
+                    userAnswers.push({ question: questions[currentQuestionIndex].question, chosen: option, correct: questions[currentQuestionIndex].correct });
+                    if (option === questions[currentQuestionIndex].correct) score++;
+                    nextQuestion();
+                };
+                optionsContainer.appendChild(button);
+            });
+
+            document.getElementById("progress-count").textContent = currentQuestionIndex + 1;
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                clearInterval(timer);
+                document.getElementById("question-container").textContent = `Quiz Complete! Your score: ${score}/${questions.length}`;
+                document.getElementById("options-container").innerHTML = "";
+                document.getElementById("progress").style.display = "none";
+                document.getElementById("timer").style.display = "none";
+                document.getElementById("next-btn").style.display = "none";
+
+                // Show Review Mode
+                const reviewContainer = document.querySelector(".review-container");
+                reviewContainer.style.display = "block";
+                const reviewList = document.getElementById("review-list");
+                reviewList.innerHTML = "";
+                
+                userAnswers.forEach(answer => {
+                    const listItem = document.createElement("li");
+                    listItem.innerHTML = `<strong>${answer.question}</strong><br>
+                        Your Answer: ${answer.chosen} ${answer.chosen === answer.correct ? "✅" : "❌"}<br>
+                        Correct Answer: ${answer.correct}`;
+                    reviewList.appendChild(listItem);
+                });
+            }
+        }
+
+        document.getElementById("next-btn").addEventListener("click", nextQuestion);
+        loadQuestion();
+    </script>
+</body>
+</html>
